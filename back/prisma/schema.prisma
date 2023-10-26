@@ -15,5 +15,13 @@ model User {
   name     String
   photoUrl String
 
-  @@map("items")
+  @@map("users")
+}
+
+model Record {
+  id       Int    @id @default(autoincrement())
+  text     String
+  audioUrl String
+
+  @@map("records")
 }
