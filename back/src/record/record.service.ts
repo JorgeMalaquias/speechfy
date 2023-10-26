@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class AuthService {
+export class RecordService {
   getHello(): string {
-    return 'Hello World!';
+    return 'record route!';
   }
 }
