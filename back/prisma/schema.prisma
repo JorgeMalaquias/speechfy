@@ -10,18 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id       Int    @id
-  name     String
-  photoUrl String
-
-  @@map("users")
-}
-
 model Record {
-  id       Int    @id @default(autoincrement())
-  text     String
-  audioUrl String
+  id        Int      @id @default(autoincrement())
+  text      String
+  audioUrl  String
+  userId    String
+  createdAt DateTime @default(now())
 
   @@map("records")
 }
