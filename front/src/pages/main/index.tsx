@@ -37,6 +37,13 @@ function MainPage() {
       return;
     }
   }, []);
+  function getRecordsData() {
+    axios
+      .post(`${import.meta.env.VITE_BASE_URL}/api/user/${user.uid}`)
+      .then((response) => {
+        console.log(response.data);
+      });
+  }
   return (
     <>
       <input

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { GoogleAuthProvider, signInWithPopup, User } from "firebase/auth";
 import { auth, storage } from "../../services/firebase";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 function AuthPage() {
   const [user, setUser] = useState<User>({} as User);
@@ -17,20 +16,6 @@ function AuthPage() {
       .catch((error) => {
         console.log(error);
         alert("Ocorreu um erro inesperado na autenticação!");
-      });
-  }
-  function login() {
-    axios
-      .post(`${import.meta.env.VITE_BASE_URL}/api/user/${user.uid}`)
-      .then((response) => {
-        console.log(response.data);
-      });
-  }
-  function register() {
-    axios
-      .post(`${import.meta.env.VITE_BASE_URL}/api/user/`)
-      .then((response) => {
-        console.log(response.data);
       });
   }
   console.log(user);
