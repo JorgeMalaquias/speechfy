@@ -31,7 +31,7 @@ function MainPage() {
     const user = window.localStorage.getItem("user");
     if (!user) {
       alert(
-        "É necessário estar logado para poder usar a extensão!Você será redirecionado para área de login"
+        "É necessário estar logado para poder acessar!Você será redirecionado para área de login"
       );
       navigate("/auth");
       return;
