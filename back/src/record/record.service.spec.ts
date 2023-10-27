@@ -2,7 +2,7 @@ import { RecordDTO } from 'src/types';
 import { InMemoryRecordRepository } from '../../test/repositories/inMemoryRecordRepository';
 import { RecordService } from './record.service';
 
-describe('Record service tests', () => {
+describe('Record service unit tests', () => {
   it('should insert a new record', async () => {
     const recordRepository = new InMemoryRecordRepository();
     const recordService = new RecordService(recordRepository);

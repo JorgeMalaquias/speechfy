@@ -5,7 +5,7 @@ import { UserRepository } from './userRepository';
 @Injectable()
 export class UserService {
   constructor(private userRepository: UserRepository) {}
-  async getInfo(id: string): Promise<User> {
+  async findUnique(id: string): Promise<User> {
     return await this.userRepository.findUnique(id);
   }
   async create(user: User): Promise<void> {

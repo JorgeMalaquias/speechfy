@@ -8,7 +8,7 @@ export class UserController {
 
   @Get('/:userId')
   async login(@Param('userId') id: string): Promise<User> {
-    return await this.userService.getInfo(id);
+    return await this.userService.findUnique(id);
   }
   @Post()
   async create(@Body() user: User): Promise<void> {

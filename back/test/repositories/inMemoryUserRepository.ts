@@ -7,6 +7,6 @@ export class InMemoryUserRepository implements UserRepository {
     await this.users.push(user);
   }
   async findUnique(id: string): Promise<User> {
-    return await this.users.find((user) => user.id === id);
+    return (await this.users.find((user) => user.id === id)) ?? null;
   }
 }
