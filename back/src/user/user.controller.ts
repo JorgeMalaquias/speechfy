@@ -7,11 +7,11 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('/:user_Id')
-  login(@Param('user_Id') id: number): User {
-    return this.userService.getInfo(id);
+  async login(@Param('userId') id: string): Promise<User> {
+    return await this.userService.getInfo(id);
   }
-  @Post('/')
-  create(@Body() user: User): void {
-    this.userService.create(user);
+  @Post()
+  async create(@Body() user: User): Promise<void> {
+    await this.userService.create(user);
   }
 }

@@ -16,7 +16,7 @@ export class PrismaUserRepository implements UserRepository {
     });
   }
   async findUnique(id: string): Promise<User> {
-    return await this.prisma.user.findUnique({
+    return await this.prisma.user.findUniqueOrThrow({
       where: {
         id,
       },

@@ -1,12 +1,16 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { RecordService } from './record.service';
 
-@Controller('/api')
+@Controller('/api/tts')
 export class RecordController {
   constructor(private readonly recordService: RecordService) {}
 
-  @Get('/tts')
+  @Get()
   getHello(): string {
+    return this.recordService.getHello();
+  }
+  @Post()
+  create(): string {
     return this.recordService.getHello();
   }
 }

@@ -5,4 +5,7 @@ export class RecordService {
   getHello(): string {
     return 'record route!';
   }
+  create(): string {
+    return 'record creation';
+  }
 }

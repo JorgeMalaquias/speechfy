@@ -6,11 +6,13 @@ import {
   getDownloadURL,
   list,
 } from "firebase/storage";
+import { User } from "firebase/auth";
 import { storage } from "../../services/firebase";
 import { useNavigate } from "react-router-dom";
 
 function MainPage() {
   const [audioToStore, setAudioToStore] = useState<any>(null);
+  const [user, setUser] = useState<User>({} as User);
   const navigate = useNavigate();
   function uploadFile() {
     if (audioToStore === null) {
@@ -28,22 +30,22 @@ function MainPage() {
       });
   }
   useEffect(() => {
-    const user = window.localStorage.getItem("user");
-    if (!user) {
+    const localStorageData: string | null = window.localStorage.getItem("user");
+    if (!localStorageData) {
       alert(
         "É necessário estar logado para poder acessar!Você será redirecionado para área de login"
       );
       navigate("/auth");
-      return;
+    } else {
+      setUser(JSON.parse(localStorageData));
+      if (!user) {
+        alert(
+          "É necessário estar logado para poder acessar!Você será redirecionado para área de login"
+        );
+        navigate("/auth");
+      }
     }
   }, []);
-  function getRecordsData() {
-    axios
-      .post(`${import.meta.env.VITE_BASE_URL}/api/user/${user.uid}`)
-      .then((response) => {
-        console.log(response.data);
-      });
-  }
   return (
     <>
       <input
