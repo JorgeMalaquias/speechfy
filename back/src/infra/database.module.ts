@@ -1,15 +1,22 @@
 import { Module } from '@nestjs/common';
-import { NotificationRepository } from 'src/application/repositories/notification-repository';
+import { RecordRepository } from 'src/record/recordRepository';
+import { UserRepository } from 'src/user/userRepository';
 import { PrismaService } from './database/prisma/prisma.service';
+import { PrismaRecordRepository } from './repositories/prismaRecordRepository';
+import { PrismaUserRepository } from './repositories/prismaUserRepository';
 
 @Module({
   providers: [
     PrismaService,
     {
-      provide: NotificationRepository,
-      useClass: PrismaNotificationsRepository,
+      provide: UserRepository,
+      useClass: PrismaUserRepository,
+    },
+    {
+      provide: RecordRepository,
+      useClass: PrismaRecordRepository,
     },
   ],
-  exports: [NotificationRepository],
+  exports: [UserRepository, RecordRepository],
 })
 export class DatabaseModule {}

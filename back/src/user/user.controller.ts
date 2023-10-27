@@ -6,7 +6,7 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('/:user_Id')
+  @Get('/:userId')
   async login(@Param('userId') id: string): Promise<User> {
     return await this.userService.getInfo(id);
   }
