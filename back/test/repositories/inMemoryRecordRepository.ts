@@ -1,10 +1,10 @@
 import { Record } from '@prisma/client';
 import { RecordRepository } from 'src/record/recordRepository';
-import { RecordDTO } from 'src/types';
+import { RecordData } from 'src/types';
 
 export class InMemoryRecordRepository implements RecordRepository {
   public records: Record[] = [];
-  async create(record: RecordDTO): Promise<void> {
+  async create(record: RecordData): Promise<void> {
     await this.records.push({
       ...record,
       createdAt: new Date(),

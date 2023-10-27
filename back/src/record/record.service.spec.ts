@@ -1,4 +1,4 @@
-import { RecordDTO } from 'src/types';
+import { RecordData } from 'src/types';
 import { InMemoryRecordRepository } from '../../test/repositories/inMemoryRecordRepository';
 import { RecordService } from './record.service';
 
@@ -8,7 +8,7 @@ describe('Record service unit tests', () => {
     const recordService = new RecordService(recordRepository);
     const initialLength = recordRepository.records.length;
 
-    const recordData: RecordDTO = {
+    const recordData: RecordData = {
       audioUrl: 'some string'.repeat(23),
       text: 'some string'.repeat(23),
       userId: 'some string'.repeat(23),
@@ -27,7 +27,7 @@ describe('Record service unit tests', () => {
   it('should return a list of records with a specific userId', async () => {
     const recordRepository = new InMemoryRecordRepository();
     const recordService = new RecordService(recordRepository);
-    const recordsData: RecordDTO[] = [
+    const recordsData: RecordData[] = [
       {
         audioUrl: 'some string'.repeat(23),
         text: 'some string'.repeat(23),
@@ -54,7 +54,7 @@ describe('Record service unit tests', () => {
   it('should return a list of records with a specific userId', async () => {
     const recordRepository = new InMemoryRecordRepository();
     const recordService = new RecordService(recordRepository);
-    const recordsData: RecordDTO[] = [
+    const recordsData: RecordData[] = [
       {
         audioUrl: 'some string'.repeat(23),
         text: 'some string'.repeat(23),

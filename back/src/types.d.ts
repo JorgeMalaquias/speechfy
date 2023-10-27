@@ -1,3 +1,3 @@
 import { Record } from '@prisma/client';
 
-type RecordDTO = Omit<Record, 'id' | 'createdAt'>;
+type RecordData = Omit<Record, 'id' | 'createdAt'>;
