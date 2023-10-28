@@ -74,10 +74,20 @@ Nest is [MIT licensed](LICENSE).
 
 ## Endpoints
 
-### POST '/api/user/:userId'
+### GET '/api/user/:userId'
+
+Este endpoint retorna os dados de um usuário, dado o id via params na requisição. Os dados são retornados no seguinte formato:
+
+```json
+{
+  "id": "someStringAsTheUserId",
+  "name": "someStringAsTheUserName",
+  "photoUrl": "someStringAsThePhotoUrl"
+}
+```
 
 ### POST '/api/user'
 
-### GET '/api/tts'
+### GET '/api/tts/:userId'
 
 ### POST '/api/tts'

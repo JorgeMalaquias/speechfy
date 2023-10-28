@@ -7,28 +7,62 @@ import {
   list,
 } from "firebase/storage";
 import { User } from "firebase/auth";
-import { storage } from "../../services/firebase";
 import { useNavigate } from "react-router-dom";
+import { storage } from "../../services/firebase";
+import axios, { AxiosRequestConfig } from "axios";
 
 function MainPage() {
-  const [audioToStore, setAudioToStore] = useState<any>(null);
+  const [audioRecorded, setAudioRecorded] = useState<Blob>({} as Blob);
   const [user, setUser] = useState<User>({} as User);
+  const [text, setText] = useState<string>("");
   const navigate = useNavigate();
-  function uploadFile() {
-    if (audioToStore === null) {
-      return;
-    }
-    const audioRef = ref(storage, `images/${audioToStore.name}`);
-    uploadBytes(audioRef, audioToStore)
-      .then((result) => {
-        console.log(result);
+
+  function recordText(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const options: AxiosRequestConfig = {
+      method: "GET",
+      url: "https://text-to-speech27.p.rapidapi.com/speech",
+      params: {
+        text,
+        lang: "en-us",
+      },
+      headers: {
+        "X-RapidAPI-Key": "aa0aa4c24cmsh23d17e101d35972p1b8633jsn9835d9dd6dcc",
+        "X-RapidAPI-Host": "text-to-speech27.p.rapidapi.com",
+      },
+      responseType: "arraybuffer",
+    };
+    axios
+      .request(options)
+      .then((response) => {
+        const blob = new Blob([response.data], {
+          type: "audio/mpeg",
+        });
+        setAudioRecorded(blob);
       })
       .catch((error) => {
         console.log(error);
-        alert("Erro de autenticação! Você será redirecionado para logar");
-        setTimeout(() => navigate("/auth"), 2000);
       });
   }
+  useEffect(() => {
+    function storeAudio() {
+      if (!audioRecorded.type) {
+        return;
+      }
+      const audioRef = ref(storage, `images/${text.slice(0, 20)}`);
+      uploadBytes(audioRef, audioRecorded)
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((error) => {
+          console.log(error);
+          alert(error);
+          //setTimeout(() => navigate("/auth"), 2000);
+        });
+    }
+    storeAudio();
+  }, [audioRecorded]);
+
   useEffect(() => {
     const localStorageData: string | null = window.localStorage.getItem("user");
     if (!localStorageData) {
@@ -48,11 +82,16 @@ function MainPage() {
   }, []);
   return (
     <>
-      <input
-        type="file"
-        onChange={(event) => setAudioToStore(event.target.files?.[0])}
-      />
-      <button onClick={uploadFile}>Upload Image</button>
+      <form onSubmit={recordText}>
+        <input
+          value={text}
+          type="text"
+          placeholder="Digite o texto que gostaria de converter para áudio"
+          required
+          onChange={(event) => setText(event.target.value)}
+        />
+        <button type="submit">Gerar Audio</button>
+      </form>
     </>
   );
 }
