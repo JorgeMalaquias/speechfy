@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { hideModal } from "../../redux/record/slice";
 import style from "./style";
@@ -7,6 +8,9 @@ function AudioModal() {
     (rootReducer) => rootReducer.recordReducer
   );
   const dispatch = useAppDispatch();
+  useEffect(() => {
+    setTimeout(() => dispatch(hideModal()), 50000);
+  }, []);
   return (
     <style.Container newaudiourl={newAudioUrl}>
       {newAudioUrl && (

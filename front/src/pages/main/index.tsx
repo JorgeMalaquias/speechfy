@@ -34,7 +34,7 @@ function MainPage() {
   const [user, setUser] = useState<User>({} as User);
   const [text, setText] = useState<string>("");
   const [records, setRecords] = useState<Record[]>([]);
-  const { updateRecords } = useAppSelector(
+  const { updateRecords, newAudioUrl } = useAppSelector(
     (rootReducer) => rootReducer.recordReducer
   );
   const dispatch = useAppDispatch();
@@ -167,7 +167,7 @@ function MainPage() {
         </form>
       </style.Container>
       <Records records={records} />
-      <AudioModal />
+      {newAudioUrl !== "" && <AudioModal />}
     </>
   );
 }
