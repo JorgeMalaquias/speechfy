@@ -131,6 +131,12 @@ function MainPage() {
 
   return (
     <>
+      {user.displayName && user.photoURL && (
+        <div>
+          <h2>{user.displayName}</h2>
+          <img src={user.photoURL} alt={user.displayName} />
+        </div>
+      )}
       <form onSubmit={recordText}>
         <input
           value={text}
