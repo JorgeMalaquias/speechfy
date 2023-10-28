@@ -1,23 +1,26 @@
-interface Props {
-  newAudioUrl?: string;
-}
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { hideModal } from "../../redux/record/slice";
+import style from "./style";
 
-function AudioModal(props: Props) {
-  const { newAudioUrl } = props;
+function AudioModal() {
+  const { newAudioUrl } = useAppSelector(
+    (rootReducer) => rootReducer.recordReducer
+  );
+  const dispatch = useAppDispatch();
   return (
-    <>
+    <style.Container newaudiourl={newAudioUrl}>
       {newAudioUrl && (
         <div>
           <div>
             <p>Seu novo áudio foi gerado</p>
-            <button>Fechar</button>
+            <button onClick={() => dispatch(hideModal())}>Fechar</button>
           </div>
           <audio controls>
             <source src={newAudioUrl} type="audio/mpeg" />
           </audio>
         </div>
       )}
-    </>
+    </style.Container>
   );
 }
 

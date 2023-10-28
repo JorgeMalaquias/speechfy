@@ -13,6 +13,8 @@ import { v4 } from "uuid";
 import AudioModal from "../../components/audioModal";
 import Records from "../../components/records";
 import style from "./style";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { displayModal } from "../../redux/record/slice";
 
 interface RecordDTO {
   userId: string;
@@ -32,7 +34,10 @@ function MainPage() {
   const [user, setUser] = useState<User>({} as User);
   const [text, setText] = useState<string>("");
   const [records, setRecords] = useState<Record[]>([]);
-  const [newAudioUrl, setNewAudioUrl] = useState<string>();
+  const { newAudioUrl } = useAppSelector(
+    (rootReducer) => rootReducer.recordReducer
+  );
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   function leaveSession() {
@@ -88,7 +93,7 @@ function MainPage() {
       axios
         .post(`${import.meta.env.VITE_API_URL}/api/tts`, body)
         .then(() => {
-          setNewAudioUrl(url);
+          dispatch(displayModal(url));
         })
         .catch((error) => {
           console.log(error);
@@ -162,7 +167,7 @@ function MainPage() {
         </form>
       </style.Container>
       <Records records={records} />
-      <AudioModal newAudioUrl={newAudioUrl} />
+      <AudioModal />
     </>
   );
 }
