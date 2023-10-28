@@ -30,7 +30,9 @@ export interface Record {
 }
 
 function MainPage() {
-  const [audioRecorded, setAudioRecorded] = useState<Blob>({} as Blob);
+  const [audioRecordNotStoredYet, setAudioRecordNotStoredYet] = useState<Blob>(
+    {} as Blob
+  );
   const [user, setUser] = useState<User>({} as User);
   const [text, setText] = useState<string>("");
   const [records, setRecords] = useState<Record[]>([]);
@@ -42,9 +44,9 @@ function MainPage() {
 
   function leaveSession() {
     window.localStorage.clear();
+    setUser({} as User);
     setTimeout(() => navigate("/auth"), 2000);
   }
-
   function recordText(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const options: AxiosRequestConfig = {
@@ -66,18 +68,7 @@ function MainPage() {
         const blob = new Blob([response.data], {
           type: "audio/mpeg",
         });
-        setAudioRecorded(blob);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  function getRecords() {
-    if (user.uid === undefined) return;
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/api/tts/${user.uid}`)
-      .then((response) => {
-        setRecords(response.data);
+        setAudioRecordNotStoredYet(blob);
       })
       .catch((error) => {
         console.log(error);
@@ -98,7 +89,6 @@ function MainPage() {
         .catch((error) => {
           console.log(error);
         });
-      getRecords();
     });
   }
 
@@ -118,18 +108,18 @@ function MainPage() {
         navigate("/auth");
       }
     }
-    getRecords();
-  }, [updateRecords]);
+  }, []);
+
   useEffect(() => {
     function storeAudio() {
-      if (!audioRecorded.type) return;
+      if (!audioRecordNotStoredYet.type) return;
       const audioRef = ref(
         storage,
-        `audios/${v4()}.${audioRecorded.type.replace("audio/", "")}`
+        `audios/${v4()}.${audioRecordNotStoredYet.type.replace("audio/", "")}`
       );
-      uploadBytes(audioRef, audioRecorded)
+      uploadBytes(audioRef, audioRecordNotStoredYet)
         .then((result) => {
-          setAudioRecorded({} as Blob);
+          setAudioRecordNotStoredYet({} as Blob);
           saveAudioUrlOnBackEnd(result);
         })
         .catch((error) => {
@@ -138,10 +128,22 @@ function MainPage() {
         });
     }
     storeAudio();
-  }, [audioRecorded]);
+  }, [audioRecordNotStoredYet]);
+
   useEffect(() => {
+    function getRecords() {
+      if (user.uid === undefined) return;
+      axios
+        .get(`${import.meta.env.VITE_API_URL}/api/tts/${user.uid}`)
+        .then((response) => {
+          setRecords(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
     getRecords();
-  }, [user]);
+  }, [user, updateRecords]);
 
   return (
     <>
