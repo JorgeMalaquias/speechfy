@@ -10,11 +10,26 @@ import { User } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { storage } from "../../services/firebase";
 import axios, { AxiosRequestConfig } from "axios";
+import { v4 } from "uuid";
+
+interface RecordDTO {
+  userId: string;
+  text: string;
+  audioUrl: string;
+}
+interface Record {
+  id: number;
+  userId: string;
+  text: string;
+  audioUrl: string;
+  createdAt: Date;
+}
 
 function MainPage() {
   const [audioRecorded, setAudioRecorded] = useState<Blob>({} as Blob);
   const [user, setUser] = useState<User>({} as User);
   const [text, setText] = useState<string>("");
+  const [records, setRecords] = useState<Record[]>([]);
   const navigate = useNavigate();
 
   function recordText(event: React.FormEvent<HTMLFormElement>) {
@@ -44,25 +59,18 @@ function MainPage() {
         console.log(error);
       });
   }
-  useEffect(() => {
-    function storeAudio() {
-      if (!audioRecorded.type) {
-        return;
-      }
-      const audioRef = ref(storage, `images/${text.slice(0, 20)}`);
-      uploadBytes(audioRef, audioRecorded)
-        .then((result) => {
-          console.log(result);
-        })
-        .catch((error) => {
-          console.log(error);
-          alert(error);
-          //setTimeout(() => navigate("/auth"), 2000);
-        });
-    }
-    storeAudio();
-  }, [audioRecorded]);
 
+  function getRecords() {
+    if (user.uid === undefined) return;
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/api/tts/${user.uid}`)
+      .then((response) => {
+        setRecords(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   useEffect(() => {
     const localStorageData: string | null = window.localStorage.getItem("user");
     if (!localStorageData) {
@@ -79,7 +87,48 @@ function MainPage() {
         navigate("/auth");
       }
     }
+    getRecords();
   }, []);
+  useEffect(() => {
+    function storeAudio() {
+      if (!audioRecorded.type) {
+        return;
+      }
+      const audioRef = ref(
+        storage,
+        `images/${v4()}.${audioRecorded.type.replace("audio/", "")}`
+      );
+      uploadBytes(audioRef, audioRecorded)
+        .then((result) => {
+          setAudioRecorded({} as Blob);
+          getDownloadURL(result.ref).then((url) => {
+            const body: RecordDTO = {
+              audioUrl: url,
+              text,
+              userId: user.uid,
+            };
+            axios
+              .post(`${import.meta.env.VITE_API_URL}/api/tts`, body)
+              .then(() => {
+                alert("Áudio salvo com sucesso!");
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+            getRecords();
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          alert(error);
+          //setTimeout(() => navigate("/auth"), 2000);
+        });
+    }
+    storeAudio();
+  }, [audioRecorded]);
+  useEffect(() => {
+    getRecords();
+  }, [user]);
   return (
     <>
       <form onSubmit={recordText}>
