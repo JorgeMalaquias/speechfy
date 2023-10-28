@@ -10,13 +10,16 @@ import { useNavigate } from "react-router-dom";
 import { storage } from "../../services/firebase";
 import axios, { AxiosRequestConfig } from "axios";
 import { v4 } from "uuid";
+import AudioModal from "../../components/audioModal";
+import Records from "../../components/records";
+import style from "./style";
 
 interface RecordDTO {
   userId: string;
   text: string;
   audioUrl: string;
 }
-interface Record {
+export interface Record {
   id: number;
   userId: string;
   text: string;
@@ -29,7 +32,13 @@ function MainPage() {
   const [user, setUser] = useState<User>({} as User);
   const [text, setText] = useState<string>("");
   const [records, setRecords] = useState<Record[]>([]);
+  const [newAudioUrl, setNewAudioUrl] = useState<string>();
   const navigate = useNavigate();
+
+  function leaveSession() {
+    window.localStorage.clear();
+    setTimeout(() => navigate("/auth"), 2000);
+  }
 
   function recordText(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -79,7 +88,7 @@ function MainPage() {
       axios
         .post(`${import.meta.env.VITE_API_URL}/api/tts`, body)
         .then(() => {
-          alert("Áudio salvo com sucesso!");
+          setNewAudioUrl(url);
         })
         .catch((error) => {
           console.log(error);
@@ -111,7 +120,7 @@ function MainPage() {
       if (!audioRecorded.type) return;
       const audioRef = ref(
         storage,
-        `images/${v4()}.${audioRecorded.type.replace("audio/", "")}`
+        `audios/${v4()}.${audioRecorded.type.replace("audio/", "")}`
       );
       uploadBytes(audioRef, audioRecorded)
         .then((result) => {
@@ -131,32 +140,29 @@ function MainPage() {
 
   return (
     <>
-      {user.displayName && user.photoURL && (
-        <div>
-          <h2>{user.displayName}</h2>
-          <img src={user.photoURL} alt={user.displayName} />
-        </div>
-      )}
-      {records.length > 0 &&
-        records.map((record) => (
-          <div>
-            <p>{record.text}</p>
-            <audio controls>
-              <source src={record.audioUrl} type="audio/mpeg" />
-            </audio>
-          </div>
-        ))}
-
-      <form onSubmit={recordText}>
-        <input
-          value={text}
-          type="text"
-          placeholder="Digite o texto que gostaria de converter para áudio"
-          required
-          onChange={(event) => setText(event.target.value)}
-        />
-        <button type="submit">Gerar Audio</button>
-      </form>
+      <style.Container>
+        {user.displayName && user.photoURL && (
+          <style.UserInfos>
+            <div>
+              <img src={user.photoURL} alt={user.displayName} />
+              <h2>{user.displayName}</h2>
+            </div>
+            <button onClick={leaveSession}>Encerrar sessão</button>
+          </style.UserInfos>
+        )}
+        <form onSubmit={recordText}>
+          <input
+            value={text}
+            type="text"
+            placeholder="Digite o texto que gostaria de converter para áudio"
+            required
+            onChange={(event) => setText(event.target.value)}
+          />
+          <button type="submit">Gerar Audio</button>
+        </form>
+      </style.Container>
+      <Records records={records} />
+      <AudioModal newAudioUrl={newAudioUrl} />
     </>
   );
 }

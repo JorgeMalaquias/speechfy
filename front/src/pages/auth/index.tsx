@@ -11,8 +11,7 @@ function AuthPage() {
         setTimeout(() => navigate("/"), 2000);
       })
       .catch((error) => {
-        console.log(error);
-        alert("Ocorreu um erro inesperado na autenticação!");
+        alert(error);
       });
   }
   return (

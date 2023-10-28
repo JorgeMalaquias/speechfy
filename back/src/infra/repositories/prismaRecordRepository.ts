@@ -21,6 +21,9 @@ export class PrismaRecordRepository implements RecordRepository {
       where: {
         userId,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
   }
 }
