@@ -34,7 +34,7 @@ function MainPage() {
   const [user, setUser] = useState<User>({} as User);
   const [text, setText] = useState<string>("");
   const [records, setRecords] = useState<Record[]>([]);
-  const { newAudioUrl } = useAppSelector(
+  const { updateRecords } = useAppSelector(
     (rootReducer) => rootReducer.recordReducer
   );
   const dispatch = useAppDispatch();
@@ -119,7 +119,7 @@ function MainPage() {
       }
     }
     getRecords();
-  }, []);
+  }, [updateRecords]);
   useEffect(() => {
     function storeAudio() {
       if (!audioRecorded.type) return;

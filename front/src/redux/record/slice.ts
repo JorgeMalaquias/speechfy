@@ -2,10 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface RecordState {
   newAudioUrl: string;
+  updateRecords: boolean;
 }
 
 const initialState: RecordState = {
   newAudioUrl: "",
+  updateRecords: true,
 };
 
 const recordSlice = createSlice({
@@ -17,6 +19,7 @@ const recordSlice = createSlice({
     },
     hideModal: (state) => {
       state.newAudioUrl = "";
+      state.updateRecords = !state.updateRecords;
     },
   },
 });
