@@ -137,6 +137,16 @@ function MainPage() {
           <img src={user.photoURL} alt={user.displayName} />
         </div>
       )}
+      {records.length > 0 &&
+        records.map((record) => (
+          <div>
+            <p>{record.text}</p>
+            <audio controls>
+              <source src={record.audioUrl} type="audio/mpeg" />
+            </audio>
+          </div>
+        ))}
+
       <form onSubmit={recordText}>
         <input
           value={text}
