@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import {
   ref,
   uploadBytes,
-  listAll,
   getDownloadURL,
-  list,
+  UploadResult,
 } from "firebase/storage";
 import { User } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -59,7 +58,6 @@ function MainPage() {
         console.log(error);
       });
   }
-
   function getRecords() {
     if (user.uid === undefined) return;
     axios
@@ -71,6 +69,25 @@ function MainPage() {
         console.log(error);
       });
   }
+  function saveAudioUrlOnBackEnd(result: UploadResult) {
+    getDownloadURL(result.ref).then((url) => {
+      const body: RecordDTO = {
+        audioUrl: url,
+        text,
+        userId: user.uid,
+      };
+      axios
+        .post(`${import.meta.env.VITE_API_URL}/api/tts`, body)
+        .then(() => {
+          alert("Áudio salvo com sucesso!");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      getRecords();
+    });
+  }
+
   useEffect(() => {
     const localStorageData: string | null = window.localStorage.getItem("user");
     if (!localStorageData) {
@@ -91,9 +108,7 @@ function MainPage() {
   }, []);
   useEffect(() => {
     function storeAudio() {
-      if (!audioRecorded.type) {
-        return;
-      }
+      if (!audioRecorded.type) return;
       const audioRef = ref(
         storage,
         `images/${v4()}.${audioRecorded.type.replace("audio/", "")}`
@@ -101,27 +116,11 @@ function MainPage() {
       uploadBytes(audioRef, audioRecorded)
         .then((result) => {
           setAudioRecorded({} as Blob);
-          getDownloadURL(result.ref).then((url) => {
-            const body: RecordDTO = {
-              audioUrl: url,
-              text,
-              userId: user.uid,
-            };
-            axios
-              .post(`${import.meta.env.VITE_API_URL}/api/tts`, body)
-              .then(() => {
-                alert("Áudio salvo com sucesso!");
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-            getRecords();
-          });
+          saveAudioUrlOnBackEnd(result);
         })
         .catch((error) => {
           console.log(error);
           alert(error);
-          //setTimeout(() => navigate("/auth"), 2000);
         });
     }
     storeAudio();
@@ -129,6 +128,7 @@ function MainPage() {
   useEffect(() => {
     getRecords();
   }, [user]);
+
   return (
     <>
       <form onSubmit={recordText}>
