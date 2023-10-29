@@ -1,5 +1,5 @@
 import { User } from '@prisma/client';
-import { InMemoryUserRepository } from '../../test/repositories/inMemoryUserRepository';
+import { InMemoryUserRepository } from 'test/repositories/inMemoryUserRepository';
 import { UserService } from './user.service';
 
 describe('User service unit tests', () => {

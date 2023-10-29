@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { DatabaseModule } from './infra/database.module';
-import { RecordController } from './record/record.controller';
-import { RecordService } from './record/record.service';
-import { UserController } from './user/user.controller';
-import { UserService } from './user/user.service';
+import { RecordController } from './infra/controllers/record.controller';
+import { RecordService } from './application/record/record.service';
+import { UserController } from './infra/controllers/user.controller';
+import { UserService } from './application/user/user.service';
 
 @Module({
   imports: [DatabaseModule],

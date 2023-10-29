@@ -1,5 +1,5 @@
 import { Record } from '@prisma/client';
-import { RecordRepository } from 'src/record/recordRepository';
+import { RecordRepository } from 'src/application/record/recordRepository';
 import { RecordData } from 'src/types';
 
 export class InMemoryRecordRepository implements RecordRepository {

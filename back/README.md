@@ -76,7 +76,7 @@ Nest is [MIT licensed](LICENSE).
 
 ### GET '/api/user/:userId'
 
-Este endpoint retorna os dados de um usuário, dado o id via params na requisição. Os dados são retornados no seguinte formato:
+Este endpoint retorna os dados de um usuário, dado o 'userId' via params na requisição. Os dados são retornados no seguinte formato:
 
 ```json
 {
@@ -86,8 +86,48 @@ Este endpoint retorna os dados de um usuário, dado o id via params na requisiç
 }
 ```
 
+Nenhum usuário é retornado caso o id passado não pertença à nenhum usuário.
+
 ### POST '/api/user'
+
+Este endpoint faz a criação de um usuário no banco de dados. É necessário enviar na requisição os seguintes atributos, conforme exemplo:
+
+```json
+{
+  "id": "someStringAsTheNewUserId",
+  "name": "someStringAsTheNewUserName",
+  "photoUrl": "someStringAsTheNewPhotoUrl"
+}
+```
+
+Caso já exista um usuário cadastrado com o id informado, a api retorna erro ou caso o body da requisição não siga o formato de exemplo é retornado erro.
 
 ### GET '/api/tts/:userId'
 
+Este endpoint retorna um array com dados de registros de um usuário específico, de acordo com o 'userId' informado via params na requisição. Estes registros associam textos com a url de seus respectivos áudios, e seguem o seguinte formato:
+
+```json
+{
+  "id": 4,
+  "text": "content of text",
+  "audioUrl": "stringInUrlFormat",
+  "userId": "someRandomString",
+  "createdAt": "dateFormatString"
+}
+```
+
+Caso não existam registros associados ao 'userId' informado, é retornado um array vazio.
+
 ### POST '/api/tts'
+
+Este endpoint realiza a criação de um registro dados os seguintes atributos, via body:
+
+```json
+{
+  "text": "content of text",
+  "audioUrl": "stringInUrlFormat",
+  "userId": "someRandomString"
+}
+```
+
+Caso o body da requisição não siga o formato de exemplo é retornado erro.

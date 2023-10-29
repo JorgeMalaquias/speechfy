@@ -14,8 +14,7 @@ const Container = styled.div`
   background-color: #777777cc;
   font-family: "Roboto", sans-serif;
   > div {
-    border: black solid;
-    background-color: gray;
+    background-color: blue;
     color: white;
     min-width: 160px;
     min-height: 110px;

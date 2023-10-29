@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { Record } from '@prisma/client';
 import { RecordDTO } from 'src/infra/DTOs/dtos';
-import { RecordService } from './record.service';
+import { RecordService } from 'src/application/record/record.service';
 
 @Controller('/api/tts')
 export class RecordController {

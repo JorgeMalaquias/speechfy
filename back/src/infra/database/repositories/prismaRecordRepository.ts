@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Record } from '@prisma/client';
-import { RecordRepository } from 'src/record/recordRepository';
+import { RecordRepository } from 'src/application/record/recordRepository';
 import { RecordData } from 'src/types';
-import { PrismaService } from '../database/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class PrismaRecordRepository implements RecordRepository {

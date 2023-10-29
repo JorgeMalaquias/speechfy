@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { RecordRepository } from 'src/record/recordRepository';
-import { UserRepository } from 'src/user/userRepository';
+import { RecordRepository } from 'src/application/record/recordRepository';
+import { UserRepository } from 'src/application/user/userRepository';
 import { PrismaService } from './database/prisma/prisma.service';
-import { PrismaRecordRepository } from './repositories/prismaRecordRepository';
-import { PrismaUserRepository } from './repositories/prismaUserRepository';
+import { PrismaRecordRepository } from './database/repositories/prismaRecordRepository';
+import { PrismaUserRepository } from './database/repositories/prismaUserRepository';
 
 @Module({
   providers: [

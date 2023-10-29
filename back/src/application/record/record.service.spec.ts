@@ -1,5 +1,5 @@
 import { RecordData } from 'src/types';
-import { InMemoryRecordRepository } from '../../test/repositories/inMemoryRecordRepository';
+import { InMemoryRecordRepository } from '../../../test/repositories/inMemoryRecordRepository';
 import { RecordService } from './record.service';
 
 describe('Record service unit tests', () => {
