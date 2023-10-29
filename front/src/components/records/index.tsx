@@ -1,9 +1,7 @@
-import { Record } from "../../pages/main";
+import { useAppSelector } from "../../redux/hooks";
+import { Record } from "../../redux/record/slice";
 import style from "./style";
 
-interface RecordsProps {
-  records: Record[];
-}
 interface RecordProps {
   record: Record;
 }
@@ -11,20 +9,24 @@ interface RecordProps {
 function RecordComponent(props: RecordProps) {
   const { record } = props;
   return (
-    <div>
+    <style.RecordContainer>
       <p>{record.text}</p>
       <audio controls>
         <source src={record.audioUrl} type="audio/mpeg" />
       </audio>
-    </div>
+    </style.RecordContainer>
   );
 }
 
-function Records(props: RecordsProps) {
-  const { records } = props;
+function Records() {
+  const { records } = useAppSelector(
+    (rootReducer) => rootReducer.recordReducer
+  );
+  console.log(records);
   return (
     <style.Container>
-      {records.length > 0 && <h1>Histórico de áudios</h1>}
+      {records.length === 0 && <div>Você não possui áudios criados ainda!</div>}
+      {records.length > 0 && <h1>Áudios criados</h1>}
       {records.length > 0 &&
         records.map((record) => <RecordComponent record={record} />)}
     </style.Container>

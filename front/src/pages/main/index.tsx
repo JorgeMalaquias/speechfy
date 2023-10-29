@@ -14,19 +14,13 @@ import AudioModal from "../../components/audioModal";
 import Records from "../../components/records";
 import style from "./style";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { displayModal } from "../../redux/record/slice";
+import { displayModal, setRecords } from "../../redux/record/slice";
+import Header from "../../components/header";
 
 interface RecordDTO {
   userId: string;
   text: string;
   audioUrl: string;
-}
-export interface Record {
-  id: number;
-  userId: string;
-  text: string;
-  audioUrl: string;
-  createdAt: Date;
 }
 
 function MainPage() {
@@ -35,8 +29,9 @@ function MainPage() {
   );
   const [user, setUser] = useState<User>({} as User);
   const [text, setText] = useState<string>("");
-  const [records, setRecords] = useState<Record[]>([]);
-  const { updateRecords, newAudioUrl } = useAppSelector(
+  const [leaveSessionModalTrigger, setLeaveSessionModalTrigger] =
+    useState<boolean>(false);
+  const { updateRecordsTrigger, newAudioUrl, records } = useAppSelector(
     (rootReducer) => rootReducer.recordReducer
   );
   const dispatch = useAppDispatch();
@@ -136,40 +131,59 @@ function MainPage() {
       axios
         .get(`${import.meta.env.VITE_API_URL}/api/tts/${user.uid}`)
         .then((response) => {
-          setRecords(response.data);
+          dispatch(setRecords(response.data));
         })
         .catch((error) => {
           console.log(error);
         });
     }
     getRecords();
-  }, [user, updateRecords]);
-
+  }, [user, updateRecordsTrigger]);
   return (
     <>
+      <Header />
       <style.Container>
         {user.displayName && user.photoURL && (
-          <style.UserInfos>
-            <div>
+          <style.UserOptions>
+            <style.UserInfos>
               <img src={user.photoURL} alt={user.displayName} />
               <h2>{user.displayName}</h2>
-            </div>
-            <button onClick={leaveSession}>Encerrar sessão</button>
-          </style.UserInfos>
+            </style.UserInfos>
+            <button onClick={() => setLeaveSessionModalTrigger(true)}>
+              Encerrar sessão
+            </button>
+          </style.UserOptions>
         )}
         <form onSubmit={recordText}>
-          <input
+          <textarea
             value={text}
-            type="text"
             placeholder="Digite o texto que gostaria de converter para áudio"
             required
             onChange={(event) => setText(event.target.value)}
-          />
+          ></textarea>
           <button type="submit">Gerar Audio</button>
         </form>
       </style.Container>
-      <Records records={records} />
+      <Records />
       {newAudioUrl !== "" && <AudioModal />}
+      {leaveSessionModalTrigger && (
+        <style.LeaveSessionModal>
+          <div>
+            <p>Tem certeza que deseja deixar a sessão?</p>
+            <style.ConfirmButtons>
+              <style.ConfirmButton yesbutton={true} onClick={leaveSession}>
+                Sim
+              </style.ConfirmButton>
+              <style.ConfirmButton
+                yesbutton={false}
+                onClick={() => setLeaveSessionModalTrigger(false)}
+              >
+                Cancelar
+              </style.ConfirmButton>
+            </style.ConfirmButtons>
+          </div>
+        </style.LeaveSessionModal>
+      )}
     </>
   );
 }

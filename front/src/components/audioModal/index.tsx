@@ -8,17 +8,14 @@ function AudioModal() {
     (rootReducer) => rootReducer.recordReducer
   );
   const dispatch = useAppDispatch();
-  useEffect(() => {
-    setTimeout(() => dispatch(hideModal()), 50000);
-  }, []);
   return (
-    <style.Container newaudiourl={newAudioUrl}>
+    <style.Container>
       {newAudioUrl && (
         <div>
-          <div>
+          <style.Options>
             <p>Seu novo áudio foi gerado</p>
             <button onClick={() => dispatch(hideModal())}>Fechar</button>
-          </div>
+          </style.Options>
           <audio controls>
             <source src={newAudioUrl} type="audio/mpeg" />
           </audio>
