@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { hideModal } from "../../redux/record/slice";
 import style from "./style";

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Provider } from "react-redux";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import AuthPage from "./pages/auth";

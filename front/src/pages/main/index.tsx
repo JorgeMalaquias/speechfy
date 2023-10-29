@@ -31,7 +31,7 @@ function MainPage() {
   const [text, setText] = useState<string>("");
   const [leaveSessionModalTrigger, setLeaveSessionModalTrigger] =
     useState<boolean>(false);
-  const { updateRecordsTrigger, newAudioUrl, records } = useAppSelector(
+  const { updateRecordsTrigger, newAudioUrl } = useAppSelector(
     (rootReducer) => rootReducer.recordReducer
   );
   const dispatch = useAppDispatch();

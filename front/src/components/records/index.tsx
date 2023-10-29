@@ -22,7 +22,6 @@ function Records() {
   const { records } = useAppSelector(
     (rootReducer) => rootReducer.recordReducer
   );
-  console.log(records);
   return (
     <style.Container>
       {records.length === 0 && <div>Você não possui áudios criados ainda!</div>}

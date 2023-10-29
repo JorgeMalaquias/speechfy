@@ -1,0 +1,36 @@
+services:
+  postgres_container:
+    image: postgres:13
+    container_name: postgres_container
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432:5432
+    env_file:
+      - back/.env
+    volumes:
+      - postgres:/var/lib/postgresql/data
+  api_node_nest:
+    build: ./back
+    container_name: api_node_nest
+    restart: always
+    ports:
+      - 3000:3000
+    env_file:
+      - back/.env
+    command: bash -c "npx prisma migrate deploy && npm run start:prod"
+    depends_on:
+      - postgres_container
+  react_app:
+    build: ./front
+    container_name: react_vite
+    restart: always
+    ports:
+      - 5173:5173
+    env_file:
+      - front/.env
+    depends_on:
+      - api_node_nest
+volumes:
+  postgres:
