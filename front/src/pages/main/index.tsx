@@ -22,6 +22,10 @@ interface RecordDTO {
   text: string;
   audioUrl: string;
 }
+interface Language {
+  language: string;
+  key: string;
+}
 
 function MainPage() {
   const [audioRecordNotStoredYet, setAudioRecordNotStoredYet] = useState<Blob>(
@@ -29,6 +33,8 @@ function MainPage() {
   );
   const [user, setUser] = useState<User>({} as User);
   const [text, setText] = useState<string>("");
+  const [languages, setLanguages] = useState<Language[]>([]);
+  const [languageSelected, setLanguageSelected] = useState<string>("pt-br");
   const [leaveSessionModalTrigger, setLeaveSessionModalTrigger] =
     useState<boolean>(false);
   const { updateRecordsTrigger, newAudioUrl } = useAppSelector(
@@ -49,7 +55,7 @@ function MainPage() {
       url: "https://text-to-speech27.p.rapidapi.com/speech",
       params: {
         text,
-        lang: "en-us",
+        lang: languageSelected,
       },
       headers: {
         "X-RapidAPI-Key": "aa0aa4c24cmsh23d17e101d35972p1b8633jsn9835d9dd6dcc",
@@ -103,6 +109,30 @@ function MainPage() {
         navigate("/auth");
       }
     }
+    const options = {
+      method: "GET",
+      url: "https://text-to-speech27.p.rapidapi.com/speech/lang",
+      headers: {
+        "X-RapidAPI-Key": "aa0aa4c24cmsh23d17e101d35972p1b8633jsn9835d9dd6dcc",
+        "X-RapidAPI-Host": "text-to-speech27.p.rapidapi.com",
+      },
+    };
+    axios
+      .request(options)
+      .then((response) => {
+        setLanguages(response.data);
+        const languageArray: Language[] = [];
+        for (let i in response.data) {
+          languageArray.push({
+            language: response.data[i],
+            key: i,
+          });
+        }
+        setLanguages(languageArray);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   useEffect(() => {
@@ -161,7 +191,22 @@ function MainPage() {
             required
             onChange={(event) => setText(event.target.value)}
           ></textarea>
-          <button type="submit">Gerar Audio</button>
+          <div>
+            <select
+              id="languages"
+              name="languages"
+              value={languageSelected}
+              required
+              onChange={(event) => setLanguageSelected(event.target.value)}
+            >
+              {languages.map((language, index) => (
+                <option key={index} value={language.key}>
+                  {language.language}
+                </option>
+              ))}
+            </select>
+            <button type="submit">Gerar Audio</button>
+          </div>
         </form>
       </style.Container>
       <Records />

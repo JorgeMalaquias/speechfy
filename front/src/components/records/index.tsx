@@ -27,7 +27,9 @@ function Records() {
       {records.length === 0 && <div>Você não possui áudios criados ainda!</div>}
       {records.length > 0 && <h1>Áudios criados</h1>}
       {records.length > 0 &&
-        records.map((record) => <RecordComponent record={record} />)}
+        records.map((record, index) => (
+          <RecordComponent key={index} record={record} />
+        ))}
     </style.Container>
   );
 }

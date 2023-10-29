@@ -14,7 +14,7 @@ const Container = styled.div`
     justify-content: space-between;
     align-items: flex-end;
     height: 100px;
-    > textarea {
+    textarea {
       width: 100%;
       height: 70px;
       border-radius: 6px;
