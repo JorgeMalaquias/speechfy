@@ -8,12 +8,11 @@ interface RecordProps {
 
 function RecordComponent(props: RecordProps) {
   const { record } = props;
+  console.log(record);
   return (
     <style.RecordContainer>
       <p>{record.text}</p>
-      <audio controls>
-        <source src={record.audioUrl} type="audio/mpeg" />
-      </audio>
+      <audio src={record.audioUrl} controls></audio>
     </style.RecordContainer>
   );
 }

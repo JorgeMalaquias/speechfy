@@ -8,7 +8,7 @@ services:
     ports:
       - 5432:5432
     env_file:
-      - back/.env
+      - back/.env.prod
     volumes:
       - postgres:/var/lib/postgresql/data
   api_node_nest:
@@ -18,7 +18,7 @@ services:
     ports:
       - 3000:3000
     env_file:
-      - back/.env
+      - back/.env.prod
     command: bash -c "npx prisma migrate deploy && npm run start:prod"
     depends_on:
       - postgres_container
@@ -29,7 +29,7 @@ services:
     ports:
       - 5173:5173
     env_file:
-      - front/.env
+      - front/.env.prod
     depends_on:
       - api_node_nest
 volumes:
